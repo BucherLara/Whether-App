@@ -1,10 +1,12 @@
-import { TodoList as List } from "./TodoList.styled.js";
+//DONE
+
+import { DoneList as List } from "./DoneList.styled.js";
 import Todo from "../Todo/index.js";
 
-export default function TodoList({ todos, toggleCheckTodo }) {
+export default function Done({ todos, toggleCheckTodo, curry }) {
   return (
     <>
-      <h2>Todos to be completed ({todos.length})</h2>
+      <h2>Done ({todos.length})</h2>
 
       {
         <List>
@@ -14,6 +16,7 @@ export default function TodoList({ todos, toggleCheckTodo }) {
                 key={todo.id}
                 todo={todo}
                 toggleCheckTodo={toggleCheckTodo}
+                wurst={curry}
               />
             );
           })}
