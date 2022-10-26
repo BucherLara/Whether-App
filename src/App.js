@@ -65,7 +65,8 @@ function App() {
     switch (currentFilter) {
       case "current":
         return todos.filter(
-          (todo) => todo.weather === weatherStatus.weather || todo.weather === "always"
+          (todo) =>
+            todo.weather === weatherStatus.weather || todo.weather === "always"
         );
       case "always":
       case "good":
