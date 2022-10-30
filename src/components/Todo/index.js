@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-export default function Todo({ todo, toggleCheckTodo, wurst }) {
+export default function Todo({ todo, toggleCheckTodo, checked }) {
   return (
     <>
       <Label htmlFor="inputCheckbox">
@@ -8,7 +8,7 @@ export default function Todo({ todo, toggleCheckTodo, wurst }) {
           type="checkbox"
           id="inputCheckbox"
           onChange={() => toggleCheckTodo(todo.id)}
-          checked={wurst}
+          checked={checked}
         />
         <ListItem weather={todo.weather}>{todo.title}</ListItem>
       </Label>

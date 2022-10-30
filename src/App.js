@@ -113,7 +113,7 @@ function App() {
         <Done
           toggleCheckTodo={toggleCheckTodo}
           todos={todos.filter((todoChecked) => todoChecked.isChecked)}
-          curry={"checked"}
+          checked={"checked"}
         />
       </main>
     </>

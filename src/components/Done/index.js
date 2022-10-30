@@ -3,7 +3,7 @@
 import { DoneList as List } from "./DoneList.styled.js";
 import Todo from "../Todo/index.js";
 
-export default function Done({ todos, toggleCheckTodo, curry }) {
+export default function Done({ todos, toggleCheckTodo, checked }) {
   return (
     <>
       <h2>Done ({todos.length})</h2>
@@ -16,7 +16,7 @@ export default function Done({ todos, toggleCheckTodo, curry }) {
                 key={todo.id}
                 todo={todo}
                 toggleCheckTodo={toggleCheckTodo}
-                wurst={curry}
+                checked={checked}
               />
             );
           })}
