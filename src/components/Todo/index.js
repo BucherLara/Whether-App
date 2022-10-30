@@ -1,14 +1,28 @@
 import styled, { css } from "styled-components";
 
-export default function Todo({ todo }) {
+export default function Todo({ todo, toggleCheckTodo, checked }) {
   return (
     <>
-      <ListItem weather={todo.weather}>{todo.title}</ListItem>
+      <Label htmlFor="inputCheckbox">
+        <input
+          type="checkbox"
+          id="inputCheckbox"
+          onChange={() => toggleCheckTodo(todo.id)}
+          checked={checked}
+        />
+        <ListItem weather={todo.weather}>{todo.title}</ListItem>
+      </Label>
     </>
   );
 }
 
+const Label = styled.label`
+  display: flex;
+`;
+
 const ListItem = styled.li`
+  width: 100%;
+  margin: 0.5em 0;
   ${({ weather }) =>
     weather === "good" &&
     css`
@@ -17,12 +31,12 @@ const ListItem = styled.li`
   ${({ weather }) =>
     weather === "bad" &&
     css`
-      background-color: blue;
+      background-color: skyblue;
     `}
     ${({ weather }) =>
     weather !== "bad" &&
     weather !== "good" &&
     css`
-      background-color: green;
+      background-color: lightgreen;
     `}
 `;

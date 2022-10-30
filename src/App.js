@@ -4,6 +4,7 @@ import InfoBox from "./components/InfoBox";
 import SelectWeather from "./components/SelectWeather";
 import TodoList from "./components/TodoList";
 import initialTodos from "./data";
+import Done from "./components/Done";
 
 function App() {
   const [todos, setTodos] = useState(initialTodos);
@@ -66,7 +67,8 @@ function App() {
       case "current":
         return todos.filter(
           (todo) =>
-            todo.weather === weatherStatus.weather || todo.weather === "always"
+            todo.weather === weatherStatus.weather ||
+            todo.weather === "always"
         );
       case "always":
       case "good":
@@ -77,6 +79,23 @@ function App() {
         return todos;
     }
   }
+  function toggleCheckTodo(todoId) {
+    console.log(todoId);
+
+    setTodos((oldTodos) => {
+      const newTodo = oldTodos.map((oldTodo) => {
+        if (oldTodo.id === todoId) {
+          return { ...oldTodo, isChecked: !oldTodo.isChecked };
+        }
+        //console.log(oldTodo.isChecked);
+        return oldTodo;
+      });
+
+      return newTodo;
+    });
+  }
+  console.log(todos.isChecked);
+  console.log(todos);
 
   const filteredTodos = [];
 
@@ -86,7 +105,16 @@ function App() {
       <main>
         <InfoBox emoji={weatherStatus.emoji} />
         {/* <SelectWeather handleChange={handleWeatherSelect} /> */}
-        <TodoList todos={todos} />
+        <TodoList
+          toggleCheckTodo={toggleCheckTodo}
+          todos={todos.filter((todoChecked) => !todoChecked.isChecked)}
+        />
+
+        <Done
+          toggleCheckTodo={toggleCheckTodo}
+          todos={todos.filter((todoChecked) => todoChecked.isChecked)}
+          checked={"checked"}
+        />
       </main>
     </>
   );
