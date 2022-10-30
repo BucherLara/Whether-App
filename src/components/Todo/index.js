@@ -9,8 +9,13 @@ export default function Todo({ todo, toggleCheckTodo, checked }) {
           id="inputCheckbox"
           onChange={() => toggleCheckTodo(todo.id)}
           checked={checked}
-        />
-        <ListItem weather={todo.weather}>{todo.title}</ListItem>
+        />{" "}
+        <ListItem
+          onClick={() => toggleCheckTodo(todo.id)}
+          weather={todo.weather}
+        >
+          {todo.title}
+        </ListItem>
       </Label>
     </>
   );

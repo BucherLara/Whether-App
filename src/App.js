@@ -6,8 +6,6 @@ import TodoList from "./components/TodoList";
 import initialTodos from "./data";
 import Done from "./components/Done";
 
-//const URL = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
-
 function App() {
   const [todos, setTodos] = useState(initialTodos);
   const [weatherStatus, setWeatherStatus] = useState({});
@@ -22,7 +20,6 @@ function App() {
           location.coords.latitude,
           location.coords.longitude
         );
-        console.log(getWeatherData);
         setWeatherStatus(convertWeatherCodeToEmoji(weatherCode));
       } catch (error) {
         console.error(error);
@@ -36,16 +33,6 @@ function App() {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
-  }
-
-  function resolve(pos) {
-    const crd = pos.coords;
-    return crd;
-  }
-
-  navigator.geolocation.getCurrentPosition(resolve, reject);
-  function reject(err) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
   }
 
   // Function to convert the fetched weather code to our weather status object
@@ -66,19 +53,20 @@ function App() {
 
   // Function to fetch the weather data for the user's location
   async function getWeatherData(latitude, longitude) {
-    console.log(crd);
     try {
       const response = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
       );
       if (!response.ok) {
-        throw new Error(response.status + "error you dummy");
+        throw new Error("wiubwieufb");
       }
-      const { longitude, latitude } = await response.json();
+      const data = await response.json();
+      console.log(data.current_weather.weathercode);
+      const weatherCodeNumber = data.current_weather.weathercode;
+      return weatherCodeNumber;
     } catch (error) {
       console.error(error);
     }
-    return 0;
   }
 
   // Function to save the selected weather filter
@@ -95,16 +83,21 @@ function App() {
             todo.weather === weatherStatus.weather || todo.weather === "always"
         );
       case "always":
+        return todos.filter((todo) => todo.weather === "always");
       case "good":
+        return todos.filter((todo) => todo.weather === "good");
       case "bad":
-        return todos.filter((todo) => todo.weather === currentFilter);
+        return todos.filter((todo) => todo.weather === "bad");
+
       case "all":
+        return todos;
       default:
         return todos;
     }
   }
+  // console.log(filterTodos(currentFilter));
   function toggleCheckTodo(todoId) {
-    console.log(todoId);
+    // console.log(todoId);
 
     setTodos((oldTodos) => {
       const newTodo = oldTodos.map((oldTodo) => {
@@ -118,25 +111,26 @@ function App() {
       return newTodo;
     });
   }
-  console.log(todos.isChecked);
-  console.log(todos);
+  // console.log(todos.isChecked);
+  // console.log(todos);
 
-  const filteredTodos = [];
+  const filteredTodos = filterTodos(currentFilter);
+  console.log(filteredTodos);
 
   return (
     <>
       <Header />
       <main>
         <InfoBox emoji={weatherStatus.emoji} />
-        {/* <SelectWeather handleChange={handleWeatherSelect} /> */}
+        <SelectWeather handleChange={handleWeatherSelect} />
         <TodoList
           toggleCheckTodo={toggleCheckTodo}
-          todos={todos.filter((todoChecked) => !todoChecked.isChecked)}
+          todos={filteredTodos.filter((todoChecked) => !todoChecked.isChecked)}
         />
 
         <Done
           toggleCheckTodo={toggleCheckTodo}
-          todos={todos.filter((todoChecked) => todoChecked.isChecked)}
+          todos={filteredTodos.filter((todoChecked) => todoChecked.isChecked)}
           checked={"checked"}
         />
       </main>
