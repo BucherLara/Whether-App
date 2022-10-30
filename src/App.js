@@ -6,6 +6,8 @@ import TodoList from "./components/TodoList";
 import initialTodos from "./data";
 import Done from "./components/Done";
 
+//const URL = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+
 function App() {
   const [todos, setTodos] = useState(initialTodos);
   const [weatherStatus, setWeatherStatus] = useState({});
@@ -20,6 +22,7 @@ function App() {
           location.coords.latitude,
           location.coords.longitude
         );
+        console.log(getWeatherData);
         setWeatherStatus(convertWeatherCodeToEmoji(weatherCode));
       } catch (error) {
         console.error(error);
@@ -33,6 +36,16 @@ function App() {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
+  }
+
+  function resolve(pos) {
+    const crd = pos.coords;
+    return crd;
+  }
+
+  navigator.geolocation.getCurrentPosition(resolve, reject);
+  function reject(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
   }
 
   // Function to convert the fetched weather code to our weather status object
@@ -53,6 +66,18 @@ function App() {
 
   // Function to fetch the weather data for the user's location
   async function getWeatherData(latitude, longitude) {
+    console.log(crd);
+    try {
+      const response = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+      );
+      if (!response.ok) {
+        throw new Error(response.status + "error you dummy");
+      }
+      const { longitude, latitude } = await response.json();
+    } catch (error) {
+      console.error(error);
+    }
     return 0;
   }
 
@@ -67,8 +92,7 @@ function App() {
       case "current":
         return todos.filter(
           (todo) =>
-            todo.weather === weatherStatus.weather ||
-            todo.weather === "always"
+            todo.weather === weatherStatus.weather || todo.weather === "always"
         );
       case "always":
       case "good":
