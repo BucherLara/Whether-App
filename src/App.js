@@ -5,11 +5,26 @@ import SelectWeather from "./components/SelectWeather";
 import TodoList from "./components/TodoList";
 import initialTodos from "./data";
 import Done from "./components/Done";
+import AddTodo from "./components/AddTodo";
+import { functionTypeAnnotation } from "@babel/types";
 
 function App() {
   const [todos, setTodos] = useState(initialTodos);
   const [weatherStatus, setWeatherStatus] = useState({});
   const [currentFilter, setCurrentFilter] = useState("current");
+
+  function handleSubmit() {
+    console.log("test");
+    /* event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    setTodos((oldTodos) => {
+      const newTodos = [...oldTodos, data.todos];
+
+      return newTodos;
+    }); */
+  }
 
   useEffect(() => {
     // You do not need to change anything in this useEffect
@@ -80,7 +95,8 @@ function App() {
       case "current":
         return todos.filter(
           (todo) =>
-            todo.weather === weatherStatus.weather || todo.weather === "always"
+            todo.weather === weatherStatus.weather ||
+            todo.weather === "always"
         );
       case "always":
         return todos.filter((todo) => todo.weather === "always");
@@ -125,15 +141,20 @@ function App() {
         <SelectWeather handleChange={handleWeatherSelect} />
         <TodoList
           toggleCheckTodo={toggleCheckTodo}
-          todos={filteredTodos.filter((todoChecked) => !todoChecked.isChecked)}
+          todos={filteredTodos.filter(
+            (todoChecked) => !todoChecked.isChecked
+          )}
         />
 
         <Done
           toggleCheckTodo={toggleCheckTodo}
-          todos={filteredTodos.filter((todoChecked) => todoChecked.isChecked)}
+          todos={filteredTodos.filter(
+            (todoChecked) => todoChecked.isChecked
+          )}
           checked={"checked"}
         />
       </main>
+      <AddTodo handleSubmit={handleSubmit} />
     </>
   );
 }
