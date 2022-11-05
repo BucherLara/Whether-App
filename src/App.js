@@ -5,12 +5,23 @@ import SelectWeather from "./components/SelectWeather";
 import TodoList from "./components/TodoList";
 import initialTodos from "./data";
 import Done from "./components/Done";
+import AddTodo from "./components/AddTodo";
+import { functionTypeAnnotation } from "@babel/types";
+import { nanoid } from "nanoid";
 
 function App() {
   const [todos, setTodos] = useState(initialTodos);
   const [weatherStatus, setWeatherStatus] = useState({});
   const [currentFilter, setCurrentFilter] = useState("current");
 
+  function addTodo(data) {
+    setTodos((oldTodos) => {
+      const newTodos = [...oldTodos, data];
+      data.id = nanoid();
+      data.isChecked = false;
+      return newTodos;
+    });
+  }
   useEffect(() => {
     // You do not need to change anything in this useEffect
     async function determineCurrentWeather() {
@@ -61,7 +72,7 @@ function App() {
         throw new Error("wiubwieufb");
       }
       const data = await response.json();
-      console.log(data.current_weather.weathercode);
+      // console.log(data.current_weather.weathercode);
       const weatherCodeNumber = data.current_weather.weathercode;
       return weatherCodeNumber;
     } catch (error) {
@@ -115,7 +126,7 @@ function App() {
   // console.log(todos);
 
   const filteredTodos = filterTodos(currentFilter);
-  console.log(filteredTodos);
+  // console.log(filteredTodos);
 
   return (
     <>
@@ -134,6 +145,7 @@ function App() {
           checked={"checked"}
         />
       </main>
+      <AddTodo addTodo={addTodo} />
     </>
   );
 }
