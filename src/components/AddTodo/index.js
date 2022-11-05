@@ -9,8 +9,20 @@ import {
 } from "./AddTodo.styled.js";
 import { useState } from "react";
 
-export default function AddTodo({ handleSubmit }) {
+export default function AddTodo({ addTodo }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    addTodo(data);
+    console.log(data);
+    setTimeout(() => {
+      setIsOpen();
+    }, 3000);
+  }
 
   return (
     <>
@@ -21,10 +33,7 @@ export default function AddTodo({ handleSubmit }) {
           setIsOpen((isOpen) => !isOpen);
         }}
       >
-        <Svg
-          variant="add"
-          color="#fff"
-        />
+        <Svg variant="add" color="#fff" />
       </Button>
       {isOpen && (
         <ModalBackground>
@@ -36,37 +45,43 @@ export default function AddTodo({ handleSubmit }) {
                 setIsOpen((isOpen) => !isOpen);
               }}
             >
-              <Svg
-                variant="close"
-                color="#3d3d3d"
-              />
+              <Svg variant="close" color="#3d3d3d" />
             </Button>
 
             <Form onSubmit={handleSubmit}>
               <label htmlFor="input">
                 <Input
+                  name="title"
                   id="input"
                   type="text"
                   maxLength="20"
                   required
                 ></Input>
               </label>
+
+              <label>
+                <input name="weather" type="radio" value="always" />
+                always
+              </label>
+              <label>
+                <input name="weather" type="radio" value="good" />
+                good
+              </label>
+              <label>
+                <input name="weather" type="radio" value="bad" />
+                bad
+              </label>
               <ButtonGroup>
-                <label>
-                  <input type="radio" />
-                  always
-                </label>
-                <label>
-                  <input type="radio" />
-                  good
-                </label>
-                <label>
-                  <input type="radio" />
-                  bad
-                </label>
+                <button type="submit">submit</button>
+                <button
+                  onClick={() => {
+                    setIsOpen((isOpen) => !isOpen);
+                  }}
+                  type="button"
+                >
+                  cancel
+                </button>
               </ButtonGroup>
-              <button type="submit">submit</button>
-              <button type="button">cancel</button>
             </Form>
           </Modal>
         </ModalBackground>

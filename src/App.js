@@ -7,25 +7,21 @@ import initialTodos from "./data";
 import Done from "./components/Done";
 import AddTodo from "./components/AddTodo";
 import { functionTypeAnnotation } from "@babel/types";
+import { nanoid } from "nanoid";
 
 function App() {
   const [todos, setTodos] = useState(initialTodos);
   const [weatherStatus, setWeatherStatus] = useState({});
   const [currentFilter, setCurrentFilter] = useState("current");
 
-  function handleSubmit() {
-    console.log("test");
-    /* event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
+  function addTodo(data) {
     setTodos((oldTodos) => {
-      const newTodos = [...oldTodos, data.todos];
-
+      const newTodos = [...oldTodos, data];
+      data.id = nanoid();
+      data.isChecked = false;
       return newTodos;
-    }); */
+    });
   }
-
   useEffect(() => {
     // You do not need to change anything in this useEffect
     async function determineCurrentWeather() {
@@ -76,7 +72,7 @@ function App() {
         throw new Error("wiubwieufb");
       }
       const data = await response.json();
-      console.log(data.current_weather.weathercode);
+      // console.log(data.current_weather.weathercode);
       const weatherCodeNumber = data.current_weather.weathercode;
       return weatherCodeNumber;
     } catch (error) {
@@ -95,8 +91,7 @@ function App() {
       case "current":
         return todos.filter(
           (todo) =>
-            todo.weather === weatherStatus.weather ||
-            todo.weather === "always"
+            todo.weather === weatherStatus.weather || todo.weather === "always"
         );
       case "always":
         return todos.filter((todo) => todo.weather === "always");
@@ -131,7 +126,7 @@ function App() {
   // console.log(todos);
 
   const filteredTodos = filterTodos(currentFilter);
-  console.log(filteredTodos);
+  // console.log(filteredTodos);
 
   return (
     <>
@@ -141,20 +136,16 @@ function App() {
         <SelectWeather handleChange={handleWeatherSelect} />
         <TodoList
           toggleCheckTodo={toggleCheckTodo}
-          todos={filteredTodos.filter(
-            (todoChecked) => !todoChecked.isChecked
-          )}
+          todos={filteredTodos.filter((todoChecked) => !todoChecked.isChecked)}
         />
 
         <Done
           toggleCheckTodo={toggleCheckTodo}
-          todos={filteredTodos.filter(
-            (todoChecked) => todoChecked.isChecked
-          )}
+          todos={filteredTodos.filter((todoChecked) => todoChecked.isChecked)}
           checked={"checked"}
         />
       </main>
-      <AddTodo handleSubmit={handleSubmit} />
+      <AddTodo addTodo={addTodo} />
     </>
   );
 }
